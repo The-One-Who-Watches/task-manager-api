@@ -23,34 +23,34 @@ router.post("/reviews", auth, async (req, res) => {
 // GET /reviews?completed={{false/true}}
 // Get /reviews?limit=10&skip=20
 // GET /reviews?sortBy=createdAt:desc
-// router.get("/reviews", auth, async (req, res) => {
-//   const match = {};
-//   const sort = {};
+router.get("/reviews/own", auth, async (req, res) => {
+  const match = {};
+  const sort = {};
 
-//   if (req.query.completed) {
-//     match.completed = req.query.completed === "true";
-//   }
+  if (req.query.completed) {
+    match.completed = req.query.completed === "true";
+  }
 
-//   if (req.query.sortBy) {
-//     const parts = req.query.sortBy.split("_");
-//     sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
-//   }
+  if (req.query.sortBy) {
+    const parts = req.query.sortBy.split("_");
+    sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
+  }
 
-//   try {
-//     await req.user.populate({
-//       path: "reviews",
-//       match,
-//       options: {
-//         limit: parseInt(req.query.limit),
-//         skip: parseInt(req.query.skip),
-//         sort,
-//       },
-//     });
-//     res.send(req.user.reviews);
-//   } catch (e) {
-//     res.status(500).send();
-//   }
-// });
+  try {
+    await req.user.populate({
+      path: "reviews",
+      match,
+      options: {
+        limit: parseInt(req.query.limit),
+        skip: parseInt(req.query.skip),
+        sort,
+      },
+    });
+    res.send(req.user.reviews);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
 
 router.get("/reviews", async (req, res) => {
   Review.find({})
